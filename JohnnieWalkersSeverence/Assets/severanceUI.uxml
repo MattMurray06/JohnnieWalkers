@@ -1,9 +1,0 @@
-<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
-    <Style src="project://database/Assets/UI.uss?fileID=7433441132597879392&amp;guid=a138719108b19c44485c6ee19ab78c4c&amp;type=3#UI" />
-    <ui:VisualElement style="flex-grow: 1; align-items: center;">
-        <ui:VisualElement name="TopContainer" style="flex-grow: 1; height: 127px; justify-content: space-between; align-items: flex-start; flex-direction: row; width: 100%;">
-            <ui:Label text="Cold Habour&#10;" name="Theme" />
-            <ui:VisualElement name="Logo" focusable="false" style="flex-grow: 0; background-image: url(&quot;project://database/Assets/Logo1.png?fileID=2800000&amp;guid=ffad33ed5223f684c948129927e65e8d&amp;type=3#Logo1&quot;); opacity: 1; display: flex; background-position-x: center 0; height: 116px; width: 357px; min-width: 250px; flex-basis: 0; flex-direction: row; min-height: 89px;" />
-        </ui:VisualElement>
-    </ui:VisualElement>
-</ui:UXML>
