@@ -7,6 +7,7 @@ public class MouseCameraController : MonoBehaviour
     [SerializeField] public float zoomSpeed = 2f;
     [SerializeField] public float minZoom = 0f;
     [SerializeField] public float maxZoom = 20f;
+    [SerializeField] public GridManager gridManager;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -35,7 +36,16 @@ public class MouseCameraController : MonoBehaviour
         {
             pos.x -= panSpeed * Time.deltaTime;
         }
+        float cameraHalfHeight = Camera.main.orthographicSize;
+        float cameraHalfWidth = Camera.main.aspect * cameraHalfHeight;
 
+        float minX = cameraHalfWidth;
+        float maxX = gridManager._width - cameraHalfWidth;
+        float minY = cameraHalfHeight;
+        float maxY = gridManager._height - cameraHalfHeight;
+
+        pos.x = Mathf.Clamp(pos.x, minX, maxX);
+        pos.y = Mathf.Clamp(pos.y, minY, maxY);
         transform.position = pos;
 
         float scroll = Input.GetAxis("Mouse ScrollWheel");
