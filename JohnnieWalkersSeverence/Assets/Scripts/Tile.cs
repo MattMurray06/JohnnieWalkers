@@ -1,13 +1,15 @@
+using System;
+using TMPro;
 using UnityEngine;
 
 public class Tile : MonoBehaviour
 {   
     [SerializeField] private Color _normalColor;
     [SerializeField] private Color _baseColor; 
-    
     [SerializeField] private Color _offsetColor;
-    
     [SerializeField] private Color _highlightColor;
+
+    private String tileText;
 
     private void Start() {
         Canvas canvas = GetComponentInChildren<Canvas>();
@@ -33,6 +35,10 @@ public class Tile : MonoBehaviour
         GetComponent<SpriteRenderer>().color = _baseColor;
     }
 
+    public void SetTileText(String text) {
+        tileText = text;
+        GetComponentInChildren<TextMeshProUGUI>().text = text;
+    }
     
 }
 

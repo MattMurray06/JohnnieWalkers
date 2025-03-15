@@ -55,6 +55,7 @@ public class GridManager : MonoBehaviour
                 }
 
                 tileStorage.Add(new Vector2Int(x, y), tileObj);
+                tileObj.GetComponent<Tile>().SetTileText("SKIBIDI");
             }
         }
 
