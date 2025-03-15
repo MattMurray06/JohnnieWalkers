@@ -38,7 +38,6 @@ public class Tile : MonoBehaviour
         tileText = text;
         TextMeshProUGUI textMeshPro = GetComponentInChildren<TextMeshProUGUI>();
         textMeshPro.text = text;
-        textMeshPro.fontSize = Mathf.Clamp(30 - text.Length , 12, 30); // Adjust the font size based on text length
     }
     
 }
