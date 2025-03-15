@@ -39,10 +39,10 @@ public class MouseCameraController : MonoBehaviour
         float cameraHalfHeight = Camera.main.orthographicSize;
         float cameraHalfWidth = Camera.main.aspect * cameraHalfHeight;
 
-        float minX = cameraHalfWidth;
-        float maxX = gridManager._width - cameraHalfWidth;
-        float minY = cameraHalfHeight;
-        float maxY = gridManager._height - cameraHalfHeight;
+        float minX = cameraHalfWidth - 0.5f;
+        float maxX = gridManager._width - cameraHalfWidth- 0.5f;
+        float minY = cameraHalfHeight- 0.5f;
+        float maxY = gridManager._height - cameraHalfHeight- 0.5f;
 
         pos.x = Mathf.Clamp(pos.x, minX, maxX);
         pos.y = Mathf.Clamp(pos.y, minY, maxY);
@@ -50,6 +50,6 @@ public class MouseCameraController : MonoBehaviour
 
         float scroll = Input.GetAxis("Mouse ScrollWheel");
         Camera.main.orthographicSize -= scroll * zoomSpeed;
-        Camera.main.orthographicSize = Mathf.Clamp(Camera.main.orthographicSize, minZoom, maxZoom);
+        Camera.main.orthographicSize = Mathf.Clamp(Camera.main.orthographicSize, minZoom, Mathf.Min(maxZoom, Mathf.Min(gridManager._width / (2 * Camera.main.aspect), gridManager._height / 2)));
     }
 }
