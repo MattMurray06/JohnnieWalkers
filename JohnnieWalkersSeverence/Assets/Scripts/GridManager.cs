@@ -4,8 +4,8 @@ using System;
 
 public class GridManager : MonoBehaviour
 {
-    [SerializeField] public int _width;
-    [SerializeField] public int _height;
+    public int _width;
+    public int _height;
     [SerializeField] private GameObject _tilePrefab;
     [SerializeField] private Transform _cameraFollowerTransform;
     [SerializeField] private Transform _cameraLeaderTransform;
@@ -15,8 +15,10 @@ public class GridManager : MonoBehaviour
     private Vector2Int end;
     private List<Vector2Int> boxes = new List<Vector2Int>();
     private Dictionary<Vector2Int, GameObject> tileStorage = new Dictionary<Vector2Int, GameObject>();
+    [SerializeField] private TextAsset csvFile;
 
     void Start() {
+
         GenerateGrid();
         _cameraFollowerTransform.position = new Vector3((_width - 1) / 2f, (_height - 1) / 2f, -10);
         _cameraLeaderTransform.position = new Vector3((_width - 1) / 2f, (_height - 1) / 2f, -10);
@@ -75,20 +77,25 @@ public class GridManager : MonoBehaviour
     }
     void GenerateGrid() {
 
+        //Load CSV file using function
+        // String[][] namesArray = SimpleCsvParse(csvFile); :: String[][]   
+        _height = namesArray.Length;
+        _width = namesArray[0].Length;
 
         for (int x = 0; x < _width; x++) {
             for (int y = 0; y < _height; y++) {
-                CreateTile(x, y);
+
+                CreateTile(x, y, namesArray[y][x]);
             }
         }
 
     }
 
-    void CreateTile(int x, int y) {
+    void CreateTile(int x, int y, String name) {
         GameObject tileObj = Instantiate(_tilePrefab, new Vector3(x, y, 0), Quaternion.identity);
         tileObj.name = "Tile_" + x + "_" + y;
 
         tileStorage.Add(new Vector2Int(x, y), tileObj);
-        tileObj.GetComponent<Tile>().SetTileText("SKIBIDI");
+        tileObj.GetComponent<Tile>().SetTileText(name);
     }
 }
