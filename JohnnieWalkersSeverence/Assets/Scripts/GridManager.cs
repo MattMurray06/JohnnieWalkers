@@ -78,17 +78,18 @@ public class GridManager : MonoBehaviour
     void GenerateGrid() {
 
         //Load CSV file using function
-        // String[][] namesArray = SimpleCsvParse(csvFile); :: String[][]   
+        String[][] namesArray = CSVreader.SimpleCsvParse(csvFile);
         _height = namesArray.Length;
         _width = namesArray[0].Length;
 
         for (int x = 0; x < _width; x++) {
             for (int y = 0; y < _height; y++) {
 
-                CreateTile(x, y, namesArray[y][x]);
+                CreateTile(x, _height - y - 1, namesArray[y][x]);
             }
         }
 
+        PrintNamesArray(namesArray);
     }
 
     void CreateTile(int x, int y, String name) {
@@ -97,5 +98,13 @@ public class GridManager : MonoBehaviour
 
         tileStorage.Add(new Vector2Int(x, y), tileObj);
         tileObj.GetComponent<Tile>().SetTileText(name);
+    }
+
+    void PrintNamesArray(String[][] namesArray) {
+        for (int y = 0; y < namesArray.Length; y++) {
+            for (int x = 0; x < namesArray[y].Length; x++) {
+                Debug.Log($"namesArray[{y}][{x}] = {namesArray[y][x]}");
+            }
+        }
     }
 }

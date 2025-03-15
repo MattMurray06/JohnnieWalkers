@@ -34,10 +34,11 @@ public class Tile : MonoBehaviour
         _normalColor = _baseColor;
         GetComponent<SpriteRenderer>().color = _baseColor;
     }
-
     public void SetTileText(String text) {
         tileText = text;
-        GetComponentInChildren<TextMeshProUGUI>().text = text;
+        TextMeshProUGUI textMeshPro = GetComponentInChildren<TextMeshProUGUI>();
+        textMeshPro.text = text;
+        textMeshPro.fontSize = Mathf.Clamp(30 - text.Length , 12, 30); // Adjust the font size based on text length
     }
     
 }
