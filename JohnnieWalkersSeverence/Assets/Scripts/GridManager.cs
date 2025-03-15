@@ -43,6 +43,8 @@ public class GridManager : MonoBehaviour
     }
 
     void GenerateGrid() {
+
+
         for (int x = 0; x < _width; x++) {
             for (int y = 0; y < _height; y++) {
                 GameObject tileObj = Instantiate(_tilePrefab, new Vector3(x, y, 0), Quaternion.identity);

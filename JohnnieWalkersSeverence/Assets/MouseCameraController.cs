@@ -5,7 +5,7 @@ public class MouseCameraController : MonoBehaviour
     [SerializeField] public float panSpeed = 20f;
     [SerializeField] public float panBorderThickness = 10f;
     [SerializeField] public float zoomSpeed = 2f;
-    [SerializeField] public float minZoom = 5f;
+    [SerializeField] public float minZoom = 0f;
     [SerializeField] public float maxZoom = 20f;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
