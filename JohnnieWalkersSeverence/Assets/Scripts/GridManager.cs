@@ -18,6 +18,8 @@ public class GridManager : MonoBehaviour
     private Dictionary<Vector2Int, GameObject> tileStorage = new Dictionary<Vector2Int, GameObject>();
     [SerializeField] private TextAsset csvFileInitial;
     [SerializeField] private TextAsset scoreFileInitial;
+    [SerializeField] private TextAsset csvFile2;
+    [SerializeField] private TextAsset scoreFile2;
     [SerializeField] private TMP_Text _scoreUI;
     [SerializeField] private TMP_Text _labelUI;
     [SerializeField] private TMP_Text _popUpBox;
@@ -32,7 +34,11 @@ public class GridManager : MonoBehaviour
 
     void Start() 
     {
-        GenerateGrid(csvFileInitial, scoreFileInitial);
+       startGrid(csvFileInitial, scoreFileInitial);
+    }
+
+    void startGrid(TextAsset csvFile, TextAsset scoreFile) {
+         GenerateGrid(csvFile, scoreFile);
         _cameraFollowerTransform.position = new Vector3((_width - 1) / 2f, (_height - 1) / 2f, -10);
         _cameraLeaderTransform.position = new Vector3((_width - 1) / 2f, (_height - 1) / 2f, -10);
         _labelUI.color = light_blue;
@@ -91,7 +97,7 @@ public class GridManager : MonoBehaviour
         seed = "AI";
         _labelUI.text = "Level: " + seed;
         _scoreUI.text = "Score: 0";
-        // insert new words
+        startGrid(csvFile2, scoreFile2);
         HideLevelPopUp();
         RoundScore = 0;
         out_of_time = false;
@@ -207,22 +213,26 @@ public class GridManager : MonoBehaviour
         }
     }
     void GenerateGrid(TextAsset csvFile, TextAsset scoreFile) {
+        // Clear existing tiles
+        foreach (var tile in tileStorage.Values) {
+            Destroy(tile);
+        }
+        tileStorage.Clear();
 
-        //Load CSV file using function
+        // Load CSV file using function
         String[][] namesArray = CSVreader.SimpleCsvParse(csvFile);
         String[][] scoreArray = CSVreader.SimpleCsvParse(scoreFile);
-
+        
         _height = namesArray.Length;
         _width = namesArray[0].Length;
 
         for (int x = 0; x < _width; x++) {
             for (int y = 0; y < _height; y++) {
-
                 CreateTile(x, _height - y - 1, namesArray[y][x], int.Parse(scoreArray[y][x]));
             }
         }
 
-        //PrintNamesArray(namesArray);
+        // PrintNamesArray(namesArray);
     }
 
     void CreateTile(int x, int y, String name, int score) {
