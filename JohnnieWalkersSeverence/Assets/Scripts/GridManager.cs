@@ -18,7 +18,7 @@ public class GridManager : MonoBehaviour
     private Dictionary<Vector2Int, GameObject> tileStorage = new Dictionary<Vector2Int, GameObject>();
     [SerializeField] private TextAsset csvFile;
     [SerializeField] private TextAsset scoreFile;
-    [SerializeField] private TextMeshPro scoreUI;
+    [SerializeField] private TMP_Text _scoreUI;
 
     void Start() {
 
@@ -44,7 +44,7 @@ public class GridManager : MonoBehaviour
             {
                 totalscore += tileStorage[boxPos].GetComponent<Tile>().score;
             }
-            UIManager.Instance.UpdateScore(100);
+            _scoreUI.text = totalscore.ToString();
         }
         UnHighlightAllBoxes();
 
