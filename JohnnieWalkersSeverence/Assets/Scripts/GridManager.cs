@@ -29,9 +29,6 @@ public class GridManager : MonoBehaviour
     private int RoundScore = 0;
     private bool mouseDown = false;
     private bool out_of_time = false;
-
-    public NextLevelManager nextLevelManager;
-
     void Start() 
     {
         GenerateGrid(csvFileInitial, scoreFileInitial);
