@@ -1,9 +1,18 @@
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class MouseCameraController : MonoBehaviour
 {
     [SerializeField] public float panSpeed = 20f;
-    [SerializeField] public float panBorderThickness = 10f;
+    /// <summary>
+    /// JOSEPH I HAVE NO CLUE WHY CHANGING PANBORDERTHICKNESS HAS NO INFLUENCE ON WHEN THE MOUSE STARTS TO SCROLL THE SCREEN UP - IT SEEMS CONSTANT, PLZ FIX
+    /// Remember the programmers credo: we do things not because they are easy, but because we thought they were going to be easy.
+    /// </summary>
+    /// 
+    /// Never mind figured it out just go into interpreter in unity
+    
+    public float panBorderThicknessx = 100f;
+    public float panBorderThicknessy = 310f;
     [SerializeField] public float zoomSpeed = 2f;
     [SerializeField] public float minZoom = 0f;
     [SerializeField] public float maxZoom = 20f;
@@ -20,19 +29,19 @@ public class MouseCameraController : MonoBehaviour
     {
         Vector3 pos = transform.position;
 
-        if (Input.mousePosition.y >= Screen.height - panBorderThickness)
+        if (Input.mousePosition.y >= Screen.height - panBorderThicknessy)
         {
             pos.y += panSpeed * Time.deltaTime;
         }
-        if (Input.mousePosition.y <= panBorderThickness)
+        if (Input.mousePosition.y <= panBorderThicknessy)
         {
             pos.y -= panSpeed * Time.deltaTime;
         }
-        if (Input.mousePosition.x >= Screen.width - panBorderThickness)
+        if (Input.mousePosition.x >= Screen.width - panBorderThicknessx)
         {
             pos.x += panSpeed * Time.deltaTime;
         }
-        if (Input.mousePosition.x <= panBorderThickness)
+        if (Input.mousePosition.x <= panBorderThicknessx)
         {
             pos.x -= panSpeed * Time.deltaTime;
         }

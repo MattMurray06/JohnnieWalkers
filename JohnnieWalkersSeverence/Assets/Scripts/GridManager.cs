@@ -19,42 +19,99 @@ public class GridManager : MonoBehaviour
     [SerializeField] private TextAsset csvFile;
     [SerializeField] private TextAsset scoreFile;
     [SerializeField] private TMP_Text _scoreUI;
+    [SerializeField] private TMP_Text _labelUI;
+
+    // Seed word to generate with - WE DON'T USE THIS YET, MAKE IN USE
+    private string seed = "Finance";
+    private Color light_blue = new Color(162f / 255f, 246f / 255f, 244f / 255f);
+    private int RoundScore = 0;
+    private bool out_of_time = false;
 
     void Start() {
 
         GenerateGrid();
         _cameraFollowerTransform.position = new Vector3((_width - 1) / 2f, (_height - 1) / 2f, -10);
         _cameraLeaderTransform.position = new Vector3((_width - 1) / 2f, (_height - 1) / 2f, -10);
+        _labelUI.color = light_blue;
+        _scoreUI.color = light_blue;
+        
+        _labelUI.text = "Level: " + seed;
+        Timer.OnTimerEnd += TimesUp;
     }
 
     void Update() {
+        // When mouse is initially clicked
         Vector2Int mouseGridPos = GetMouseGridPosition();
-
-        if (Input.GetMouseButtonDown(0) && mouseDown == false) {
-            mouseDown= true;
+        if (Input.GetMouseButtonDown(0) && mouseDown == false && out_of_time == false) {
+            mouseDown = true;
             start = mouseGridPos;
             boxes.Clear();
         }
 
-        if (Input.GetMouseButtonUp(0) && mouseDown == true) {
+        // When mouse is released
+        if (Input.GetMouseButtonUp(0) && mouseDown == true && out_of_time == false) {
             mouseDown = false;
             end = mouseGridPos;
-            int totalscore = 0;
-            foreach (Vector2Int boxPos in boxes)
-            {
-                totalscore += tileStorage[boxPos].GetComponent<Tile>().score;
-            }
-            _scoreUI.text = totalscore.ToString();
-        }
-        UnHighlightAllBoxes();
+            CalculateScore();
 
-        if (mouseDown == true){
+            _scoreUI.text = "Score: " + RoundScore.ToString();
+        }
+        UnHighlightAndRemoveWiggleAllBoxes();
+
+        if (mouseDown == true && out_of_time == false)
+        {
             CalculateBoxes(mouseGridPos);
             HighlightBoxes();
         }
     }
 
-    void CalculateBoxes(Vector2Int mouseGridPos){
+    void CalculateScore()
+    {
+        int sub_score = 0;
+        //// CHANGE THIS CALCULATION IF YOU WANT
+        foreach (Vector2Int boxPos in boxes)
+        {
+            sub_score += tileStorage[boxPos].GetComponent<Tile>().score;
+        }
+        //// SO I'VE INSENTIVISED FINDING ALL 4 OF THE RELATED FINANCE TERMS. NONE IS -2 POINTS, ONLY 1 IS A -1 !!!PENALTY!!!, 2 IS NEUTRAL, 3 IS + 2, 4 IS + 4
+        /// PLEASE PLEASE PLEASE CHANGE THIS IN THE MORNING, JUST VERY ROUGHS
+        if (sub_score == 0)
+        {
+
+            RoundScore -= 2;
+        }
+        else if (sub_score == 1)
+        {
+            RoundScore -= 1;
+        }
+        else if (sub_score == 2)
+        {
+            // Do nothing, left in for yous
+        }
+        else if (sub_score == 3)
+        {
+            RoundScore += 2;
+        }
+        else if (sub_score == 4)
+        {
+            RoundScore += 4;
+        }
+        // Round score declared above so no need to return.
+    }
+
+    void TimesUp()
+    {
+        /// This works!!!! That was entirely unexpected. Unity working first try? improbable. Wohooo
+        
+        // sorry for the jank implementation, it works
+        // as microsoft says about all it's products, if it ain't broke, break it
+        out_of_time = true;
+        //// Do something for the next level here...
+        Timer.OnTimerEnd -= TimesUp;
+    }
+
+    void CalculateBoxes(Vector2Int mouseGridPos)
+    {
         boxes.Clear();
         int stepx = start.x < mouseGridPos.x ? 1 : -1;
         int stepy = start.y < mouseGridPos.y ? 1 : -1;
@@ -70,16 +127,20 @@ public class GridManager : MonoBehaviour
         return mouseGridPos;
     }
 
-    void UnHighlightAllBoxes(){
+    void UnHighlightAndRemoveWiggleAllBoxes(){
         foreach (var tile in tileStorage.Values) {
             tile.GetComponent<Tile>().SetColorUnHighlighted();
+            tile.GetComponent<Tile>().wiggle = false;
         }
     }
 
     void HighlightBoxes(){
         foreach (Vector2Int boxPos in boxes){
             if (tileStorage.ContainsKey(boxPos)){
-                tileStorage[boxPos].GetComponent<Tile>().SetColorHighlighted();
+                //tileStorage[boxPos].GetComponent<Tile>().SetColorHighlighted();
+                tileStorage[boxPos].GetComponent<Tile>().wiggle = true;
+                //tileStorage[boxPos].GetComponent<Tile>().
+
             }
         }
     }

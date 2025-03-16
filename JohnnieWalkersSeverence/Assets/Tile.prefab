@@ -343,3 +343,7 @@ MonoBehaviour:
   _baseColor: {r: 0.103773594, g: 0.103773594, b: 0.103773594, a: 1}
   _offsetColor: {r: 0.5943396, g: 0.5943396, b: 0.5943396, a: 1}
   _highlightColor: {r: 1, g: 0, b: 0, a: 1}
+  score: 0
+  wiggleSpeed: 30
+  wiggleAngle: 3
+  wiggle: 0
