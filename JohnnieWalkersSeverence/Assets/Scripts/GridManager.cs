@@ -22,13 +22,14 @@ public class GridManager : MonoBehaviour
     [SerializeField] private TMP_Text _labelUI;
     [SerializeField] private TMP_Text _popUpBox;
     [SerializeField] private TMP_Text _levelPopUp;
-
+    [SerializeField] private Timer _timer;
     // Seed word to generate with - WE DON'T USE THIS YET, MAKE IN USE
     private string seed = "Finance";
     private Color light_blue = new Color(162f / 255f, 246f / 255f, 244f / 255f);
     private int RoundScore = 0;
     private bool mouseDown = false;
     private bool out_of_time = false;
+
     void Start() 
     {
         GenerateGrid(csvFileInitial, scoreFileInitial);
@@ -92,7 +93,8 @@ public class GridManager : MonoBehaviour
         _scoreUI.text = "Score: 0";
         // insert new words
         HideLevelPopUp();
-        
+        RoundScore = 0;
+        out_of_time = false;
     }
     void CalculateScore()
     {
@@ -152,14 +154,22 @@ public class GridManager : MonoBehaviour
         // sorry for the jank implementation, it works
         // as microsoft says about all it's products, if it ain't broke, break it
         out_of_time = true;
-
+        ClearTiles();
         Timer.OnTimerEnd -= TimesUp;
         Debug.Log("First Step reached");
 
         ShowLevelPopUp();
-        
+        _timer.GetComponent<Timer>().timeRemaining = 60;
     }
 
+
+    void ClearTiles()
+    {
+        foreach (var tile in tileStorage.Values)
+        {
+            tile.GetComponent<Tile>().SetTileText("");
+        }
+    }
 
     void CalculateBoxes(Vector2Int mouseGridPos)
     {

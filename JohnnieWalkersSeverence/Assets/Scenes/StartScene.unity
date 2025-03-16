@@ -434,6 +434,7 @@ MonoBehaviour:
   _labelUI: {fileID: 840807960}
   _popUpBox: {fileID: 1389752849}
   _levelPopUp: {fileID: 2144910832}
+  _timer: {fileID: 860467746}
 --- !u!4 &646111240
 Transform:
   m_ObjectHideFlags: 0
@@ -1377,8 +1378,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Congratulations, you made it onto the next level. Start Next Level (y)
-    or Quit (n).
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 6aea7ebf103fd3646ba8c0a8e58b7684, type: 2}
   m_sharedMaterial: {fileID: -3331635752637887566, guid: 6aea7ebf103fd3646ba8c0a8e58b7684, type: 2}
