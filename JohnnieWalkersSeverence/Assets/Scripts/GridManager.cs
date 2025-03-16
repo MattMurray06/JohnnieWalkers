@@ -15,6 +15,7 @@ public class GridManager : MonoBehaviour
     private Vector2Int start;
     private Vector2Int end;
     private List<Vector2Int> boxes = new List<Vector2Int>();
+    [SerializeField] private Transform trashBinPos;
     private Dictionary<Vector2Int, GameObject> tileStorage = new Dictionary<Vector2Int, GameObject>();
     [SerializeField] private TextAsset csvFileInitial;
     [SerializeField] private TextAsset scoreFileInitial;
@@ -26,7 +27,7 @@ public class GridManager : MonoBehaviour
     [SerializeField] private TMP_Text _levelPopUp;
     [SerializeField] private Timer _timer;
     // Seed word to generate with - WE DON'T USE THIS YET, MAKE IN USE
-    private string seed = "Finance";
+    private string seed = "Blockchain";
     private Color light_blue = new Color(162f / 255f, 246f / 255f, 244f / 255f);
     private int RoundScore = 0;
     private bool mouseDown = false;
@@ -112,18 +113,22 @@ public class GridManager : MonoBehaviour
         }
         //// SO I'VE INSENTIVISED FINDING ALL 4 OF THE RELATED FINANCE TERMS. NONE IS -2 POINTS, ONLY 1 IS A -1 !!!PENALTY!!!, 2 IS NEUTRAL, 3 IS + 2, 4 IS + 4
         /// PLEASE PLEASE PLEASE CHANGE THIS IN THE MORNING, JUST VERY ROUGHS
+        if (boxes.Count > 16){
+            RoundScore -= 2;
+        }
+        
         if (sub_score == 0)
         {
             ShowNope();
-            RoundScore -= 2;
+            RoundScore -= 1;
         }
         else if (sub_score == 1)
         {
-            RoundScore -= 1;
+            RoundScore += 0;
         }
         else if (sub_score == 2)
         {
-            // Do nothing, left in for yous
+            RoundScore += 1;// Do nothing, left in for yous
         }
         else if (sub_score == 3)
         {
@@ -133,7 +138,22 @@ public class GridManager : MonoBehaviour
         {
             RoundScore += 4;
         }
-        // Round score declared above so no need to return.
+
+        // Remove highlighted boxes and apply force towards trashBin
+        foreach (Vector2Int boxPos in boxes)
+        {
+            if (tileStorage.ContainsKey(boxPos))
+            {
+                GameObject tile = tileStorage[boxPos];
+                tileStorage.Remove(boxPos);
+                Rigidbody2D rb = tile.GetComponent<Rigidbody2D>();
+                if (rb != null)
+                {
+                    Vector2 direction = (trashBinPos.position - tile.transform.position).normalized;
+                    rb.AddForce(direction * 10f, ForceMode2D.Impulse);
+                }
+            }
+        }
     }
     
     void ShowLevelPopUp()
@@ -197,20 +217,22 @@ public class GridManager : MonoBehaviour
 
     void UnHighlightAndRemoveWiggleAllBoxes(){
         foreach (var tile in tileStorage.Values) {
-            tile.GetComponent<Tile>().SetColorUnHighlighted();
+            tile.GetComponent<Tile>().SetColorBase();
             tile.GetComponent<Tile>().wiggle = false;
         }
     }
 
     void HighlightBoxes(){
-        foreach (Vector2Int boxPos in boxes){
+
+       foreach (Vector2Int boxPos in boxes){
             if (tileStorage.ContainsKey(boxPos)){
                 //tileStorage[boxPos].GetComponent<Tile>().SetColorHighlighted();
                 tileStorage[boxPos].GetComponent<Tile>().wiggle = true;
                 //tileStorage[boxPos].GetComponent<Tile>().
+                tileStorage[boxPos].GetComponent<Tile>().SetColorHighlighted();
 
             }
-        }
+       }
     }
     void GenerateGrid(TextAsset csvFile, TextAsset scoreFile) {
         // Clear existing tiles

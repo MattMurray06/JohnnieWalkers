@@ -249,6 +249,7 @@ GameObject:
   - component: {fileID: 8563783526473293721}
   - component: {fileID: 1197793635388595790}
   - component: {fileID: 2646219212289996227}
+  - component: {fileID: 1362463122114284791}
   m_Layer: 0
   m_Name: Tile
   m_TagString: Untagged
@@ -279,7 +280,7 @@ SpriteRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4555228859260840411}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -339,11 +340,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f2ed94faa0873f4781fceaa951a7f91, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _normalColor: {r: 0, g: 0, b: 0, a: 0}
-  _baseColor: {r: 0.103773594, g: 0.103773594, b: 0.103773594, a: 1}
-  _offsetColor: {r: 0.5943396, g: 0.5943396, b: 0.5943396, a: 1}
-  _highlightColor: {r: 1, g: 0, b: 0, a: 1}
+  _baseColor: {r: 0.63529414, g: 0.9647059, b: 0.95686275, a: 1}
+  _highlightColor: {r: 1, g: 1, b: 1, a: 1}
   score: 0
   wiggleSpeed: 30
   wiggleAngle: 3
   wiggle: 0
+  _baseScale: {x: 2, y: 2, z: 2}
+  _highlightScale: {x: 2.3, y: 2.3, z: 2.3}
+--- !u!50 &1362463122114284791
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4555228859260840411}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
