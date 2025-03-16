@@ -8,7 +8,7 @@ public class Tile : MonoBehaviour
     [SerializeField] private Color _baseColor; 
     [SerializeField] private Color _offsetColor;
     [SerializeField] private Color _highlightColor;
-
+    public int score;
     private String tileText;
 
     private void Start() {

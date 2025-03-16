@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System;
+using TMPro;
 
 public class GridManager : MonoBehaviour
 {
@@ -16,6 +17,8 @@ public class GridManager : MonoBehaviour
     private List<Vector2Int> boxes = new List<Vector2Int>();
     private Dictionary<Vector2Int, GameObject> tileStorage = new Dictionary<Vector2Int, GameObject>();
     [SerializeField] private TextAsset csvFile;
+    [SerializeField] private TextAsset scoreFile;
+    [SerializeField] private TextMeshPro scoreUI;
 
     void Start() {
 
@@ -36,7 +39,12 @@ public class GridManager : MonoBehaviour
         if (Input.GetMouseButtonUp(0) && mouseDown == true) {
             mouseDown = false;
             end = mouseGridPos;
-            
+            int totalscore = 0;
+            foreach (Vector2Int boxPos in boxes)
+            {
+                totalscore += tileStorage[boxPos].GetComponent<Tile>().score;
+            }
+            UIManager.Instance.UpdateScore(100);
         }
         UnHighlightAllBoxes();
 
@@ -79,25 +87,28 @@ public class GridManager : MonoBehaviour
 
         //Load CSV file using function
         String[][] namesArray = CSVreader.SimpleCsvParse(csvFile);
+        String[][] scoreArray = CSVreader.SimpleCsvParse(scoreFile);
+
         _height = namesArray.Length;
         _width = namesArray[0].Length;
 
         for (int x = 0; x < _width; x++) {
             for (int y = 0; y < _height; y++) {
 
-                CreateTile(x, _height - y - 1, namesArray[y][x]);
+                CreateTile(x, _height - y - 1, namesArray[y][x], int.Parse(scoreArray[y][x]));
             }
         }
 
         PrintNamesArray(namesArray);
     }
 
-    void CreateTile(int x, int y, String name) {
+    void CreateTile(int x, int y, String name, int score) {
         GameObject tileObj = Instantiate(_tilePrefab, new Vector3(x, y, 0), Quaternion.identity);
         tileObj.name = "Tile_" + x + "_" + y;
 
         tileStorage.Add(new Vector2Int(x, y), tileObj);
         tileObj.GetComponent<Tile>().SetTileText(name);
+        tileObj.GetComponent<Tile>().score = score;
     }
 
     void PrintNamesArray(String[][] namesArray) {
