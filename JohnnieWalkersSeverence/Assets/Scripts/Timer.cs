@@ -14,6 +14,11 @@ public class Timer : MonoBehaviour
     {
         _timerUI.color = light_blue;
     }
+
+    public void SetTimeRemaining(float timeRemaining)
+    {
+        this.timeRemaining = timeRemaining;
+    }
     void Update()
     {
 
@@ -36,12 +41,14 @@ public class Timer : MonoBehaviour
             }
             _timerUI.text = "Time Remaining: " + min_str + ":" + sec_str;
         }
-        else
+        else if (timeRemaining <= 0 && timerRunning == true)
         {
+        
             timerRunning = false;
             timeRemaining = 0;
             _timerUI.text = "Time Remaining: 0:00";
             OnTimerEnd?.Invoke();
+
         }
     }
 }

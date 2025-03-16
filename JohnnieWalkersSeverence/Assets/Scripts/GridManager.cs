@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System;
 using TMPro;
+using UnityEngine.UI;
 
 public class GridManager : MonoBehaviour
 {
@@ -11,36 +12,43 @@ public class GridManager : MonoBehaviour
     [SerializeField] private Transform _cameraFollowerTransform;
     [SerializeField] private Transform _cameraLeaderTransform;
 
-    private bool mouseDown = false;
     private Vector2Int start;
     private Vector2Int end;
     private List<Vector2Int> boxes = new List<Vector2Int>();
     private Dictionary<Vector2Int, GameObject> tileStorage = new Dictionary<Vector2Int, GameObject>();
-    [SerializeField] private TextAsset csvFile;
-    [SerializeField] private TextAsset scoreFile;
+    [SerializeField] private TextAsset csvFileInitial;
+    [SerializeField] private TextAsset scoreFileInitial;
     [SerializeField] private TMP_Text _scoreUI;
     [SerializeField] private TMP_Text _labelUI;
+    [SerializeField] private TMP_Text _popUpBox;
+    [SerializeField] private TMP_Text _levelPopUp;
 
     // Seed word to generate with - WE DON'T USE THIS YET, MAKE IN USE
     private string seed = "Finance";
     private Color light_blue = new Color(162f / 255f, 246f / 255f, 244f / 255f);
     private int RoundScore = 0;
+    private bool mouseDown = false;
     private bool out_of_time = false;
 
-    void Start() {
+    public NextLevelManager nextLevelManager;
 
-        GenerateGrid();
+    void Start() 
+    {
+        GenerateGrid(csvFileInitial, scoreFileInitial);
         _cameraFollowerTransform.position = new Vector3((_width - 1) / 2f, (_height - 1) / 2f, -10);
         _cameraLeaderTransform.position = new Vector3((_width - 1) / 2f, (_height - 1) / 2f, -10);
         _labelUI.color = light_blue;
         _scoreUI.color = light_blue;
         
         _labelUI.text = "Level: " + seed;
+        _popUpBox.text = "";
+        HideLevelPopUp();
         Timer.OnTimerEnd += TimesUp;
     }
 
     void Update() {
         // When mouse is initially clicked
+        ////////////////////////////////////// DRAGGING-TO-CREATE-BOX CODE 
         Vector2Int mouseGridPos = GetMouseGridPosition();
         if (Input.GetMouseButtonDown(0) && mouseDown == false && out_of_time == false) {
             mouseDown = true;
@@ -56,15 +64,39 @@ public class GridManager : MonoBehaviour
 
             _scoreUI.text = "Score: " + RoundScore.ToString();
         }
+        ////////////////////////////////////////// 
         UnHighlightAndRemoveWiggleAllBoxes();
 
+        /////////////////////////////////////////// CALCULATES BOXES TO HIGHLIGHT / WIGGLE
         if (mouseDown == true && out_of_time == false)
         {
             CalculateBoxes(mouseGridPos);
             HighlightBoxes();
         }
+
+
+        //////////////////////////////// ONCE TIME OUT, EITHER NEXT LEVEL OR QUIT
+        if (out_of_time == true)
+        {
+            if (Input.GetKeyDown(KeyCode.Y))
+            {
+                MakeNextLevel();
+            } else if (Input.GetKeyDown(KeyCode.N))
+            {
+                QuitApplication();
+            }
+        }
     }
 
+    void MakeNextLevel()
+    {
+        seed = "AI";
+        _labelUI.text = "Level: " + seed;
+        _scoreUI.text = "Score: 0";
+        // insert new words
+        HideLevelPopUp();
+        
+    }
     void CalculateScore()
     {
         int sub_score = 0;
@@ -77,7 +109,7 @@ public class GridManager : MonoBehaviour
         /// PLEASE PLEASE PLEASE CHANGE THIS IN THE MORNING, JUST VERY ROUGHS
         if (sub_score == 0)
         {
-
+            ShowNope();
             RoundScore -= 2;
         }
         else if (sub_score == 1)
@@ -98,7 +130,24 @@ public class GridManager : MonoBehaviour
         }
         // Round score declared above so no need to return.
     }
-
+    
+    void ShowLevelPopUp()
+    {
+        _levelPopUp.text = "Congratulations, you made it onto the next level. Start Next Level (y) or Quit (n).";
+    }
+    void HideLevelPopUp()
+    {
+        _levelPopUp.text = "";
+    }
+    void ShowNope()
+    {
+        _popUpBox.text = "Nope";
+        Invoke("ClearNope", 1);
+    }
+    void ClearNope()
+    {
+        _popUpBox.text = "";
+    }
     void TimesUp()
     {
         /// This works!!!! That was entirely unexpected. Unity working first try? improbable. Wohooo
@@ -106,9 +155,14 @@ public class GridManager : MonoBehaviour
         // sorry for the jank implementation, it works
         // as microsoft says about all it's products, if it ain't broke, break it
         out_of_time = true;
-        //// Do something for the next level here...
+
         Timer.OnTimerEnd -= TimesUp;
+        Debug.Log("First Step reached");
+
+        ShowLevelPopUp();
+        
     }
+
 
     void CalculateBoxes(Vector2Int mouseGridPos)
     {
@@ -121,6 +175,7 @@ public class GridManager : MonoBehaviour
             }
         }
     }
+
     Vector2Int GetMouseGridPosition() {
         Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector2Int mouseGridPos = new Vector2Int(Mathf.FloorToInt(mousePos.x + 0.5f), Mathf.FloorToInt(mousePos.y + 0.5f));
@@ -144,7 +199,7 @@ public class GridManager : MonoBehaviour
             }
         }
     }
-    void GenerateGrid() {
+    void GenerateGrid(TextAsset csvFile, TextAsset scoreFile) {
 
         //Load CSV file using function
         String[][] namesArray = CSVreader.SimpleCsvParse(csvFile);
@@ -160,7 +215,7 @@ public class GridManager : MonoBehaviour
             }
         }
 
-        PrintNamesArray(namesArray);
+        //PrintNamesArray(namesArray);
     }
 
     void CreateTile(int x, int y, String name, int score) {
@@ -179,4 +234,11 @@ public class GridManager : MonoBehaviour
             }
         }
     }
+
+    void QuitApplication()
+    {
+        UnityEditor.EditorApplication.isPlaying = false;
+        Application.Quit();
+    }
 }
+
